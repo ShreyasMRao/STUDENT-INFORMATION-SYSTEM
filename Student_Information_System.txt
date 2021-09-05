@@ -1,0 +1,219 @@
+import datetime
+
+def valid(dat):
+    try:
+        datetime.datetime.strptime(dat, '%Y-%m-%d')
+    except ValueError:
+        raise ValueError("Incorrect data format, should be YYYY-MM-DD")
+       
+def enroll_stu():
+    status=True
+    name=input('Enter the students name ')
+    for i in name:
+        if i not in ('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'):
+            print('Invalid name')
+    dob=input('Enter the date of birth in YYYY-MM-DD format. ')
+    valid(dob)
+    address=input('Enter the address of the student. ')
+    ten_twel_perc=float(input('Enter the X/XII percentage of the student. '))
+    cur_year=int(input('Enter the current year of the student. '))
+    if cur_year<1 or cur_year>5:
+        print('Invalid year ')
+        status=False
+    degree=input('Enter the degree of the student. ')
+    if degree not in ['CS','EE','BT','MT','ME','CH','CE','EC','TT','HR','PH']:
+        print('Invalid degree')
+        status=False
+    gpa=float(input('Enter the GPA of the student. '))
+    if status:
+        print('Enrollment success!')
+        student[name]={'DOB':dob,'Address':address,'X/XII':ten_twel_perc,'current_year':cur_year,'Degree':degree,'GPA':gpa}
+        print(student)
+        return True
+    else:
+        return False
+   
+   
+   
+def update_stu():
+    status=True
+    name=input('Enter the name of the student whose details need to be updated. ')
+    if name not in student:
+        print('invalid student ')
+        status=False
+    if status:
+        pass
+    else:
+        return False
+   
+    num=int(input('How many fields do you want to update? '))
+    for i in range(num):
+        value=input('''Enter the field for which details to be changed for the student one at a time.
+        DOB,Address,X/XII,current_year,Degree,GPA
+        ''')
+   
+        if value not in student[name]:
+            print('Invalid field mentioned ')
+            status=False
+            break
+        else:
+            val=input('Enter the value for the field')
+            student[name][value]=val
+        print(student[name])
+   
+    if status:
+        print('Update success!')
+        return True
+    else:
+        return False
+       
+def del_stu():
+    status=True
+    name=input('Enter the name of the student whose details needs to be deleted. ')
+    yono=input('Do you want to delete all the information regarding the student? (y or n) ')
+    if yono=='y':
+        del student[name]
+    else:
+        num=int(input('How many fields do you want to delete? '))
+    for i in range(num):
+        value=input('''Enter the field for which details need to be deleted for the student, one at a time.
+        DOB,Address,X/XII,current_year,Degree,GPA
+        '''
+        )
+       
+        if value not in student[name]:
+            print('Invalid field mentioned ')
+            status=False
+            break
+        else:
+            del student[name][value]
+           
+    if status:
+        print('Deletion success!')
+        print(student)
+        return True
+    else:
+        return False      
+
+   
+def name_ord():
+    print(sorted(student))
+
+def func(a):
+    '''
+    b=[]
+    for i in range(len(a)):
+        b.append(a[i][1])
+    c=sorted(b)
+    return c
+    '''
+    return a[1]
+
+def gpa_ord():
+    l=[]
+    for i in student:
+        l.append((i,student[i]['GPA']))
+    print(sorted(l,key=func))
+   
+def name_list():
+    status=True
+    t=[]
+    stu=[]
+    for i in range(2):
+        a=float(input('Enter the range of GPA one after another. '))
+        if a>10:
+            print('Invalid Entry!')
+            status=False
+        t.append(a)
+    for i in student:
+        if student[i]['GPA']>t[0] and student[i]['GPA']<t[1]:
+            stu.append(i)
+    if status==False:
+        print('Invalid GPA given as input. ')
+    else:
+        print(stu)
+
+def func2(n):
+    return n[1]
+   
+def top_five():
+    top=[]
+    lis=[]
+    for i in student:
+        top.append((i,student[i]['GPA'],student[i]['Degree']))
+    c=sorted(top,key=func,reverse=True)
+    for k in ['CS','EE','BT','MT','ME','CH','CE','EC','TT','HR','PH']:
+        count=0
+        for j in range(len(c)):
+            if c[j][2]==k:
+                lis.append(c[j])
+                count+=1
+                if count==2:
+                    break
+    print(lis)
+
+def promotion():
+    for i in student:
+        if student[i]['GPA']>=5:
+            if student[i]['current_year']==5:
+                print('Congratulations,',student[i],'has passed out!')
+            else:
+                student[i]['current_year']+=1
+   
+print('Welcome to student information system')
+a=True
+student={}
+
+while a:    
+   
+    print('Choose a task to perform from 1 to 6.')
+
+    proc=input('''
+    1.Enroll a new student.
+    2.Update a student's information.
+    3.Delete a student's information.
+    4.List names of all students of a given year.
+        a.In the order of names.
+        b.In the order of GPA.
+    5.Given names of all students with GPA in a given range [a,b].
+    6.Find top 5 performing students of each degree.
+    7.EXIT
+    ''')
+
+    print(proc)
+
+    if proc=='1':
+        stat=enroll_stu()
+        if stat==False:
+            print('Enrollment failed due to wrong inputs. ')
+        else:
+            pass
+   
+    elif proc=='2':
+        stat=update_stu()
+        if stat==False:
+            print('Invalid Student details entered.')
+       
+    elif proc=='3':
+        stat=del_stu()
+        if stat==False:
+            print('Invalid details provided. ')
+        else:
+            pass
+
+    elif proc=='4':
+        order=input('Enter the type of ordering required. a-Order of name, b-Order of GPA')
+        if order=='a':
+            name_ord()
+        elif order=='b':
+            gpa_ord()
+        else:
+            print('Invalid entry. ')
+
+    elif proc=='5':
+        name_list()
+
+    elif proc=='6':
+        top_five()
+    else:
+        break
